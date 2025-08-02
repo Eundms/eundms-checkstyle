@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+  "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+  "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
+  <!-- 모든 파일에서 Javadoc 관련 체크 제외 -->
+  <suppress checks="JavadocMethod"/>
+  <suppress checks="MissingJavadocMethod"/>
+  <suppress checks="MissingJavadocType"/>
+  <suppress checks="SummaryJavadoc"/>
+  <suppress checks="JavadocParagraph"/>
+
+  <!-- 모든 파일에서 라인 길이 체크 제외 -->
+  <suppress checks="LineLength"/>
+</suppressions>
