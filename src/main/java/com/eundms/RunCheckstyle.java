@@ -1,4 +1,5 @@
 package com.eundms;
+
 import com.puppycrawl.tools.checkstyle.Main;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -6,16 +7,21 @@ import java.io.InputStream;
 import java.nio.file.Files;
 
 public class RunCheckstyle {
+  private static final String SUPPRESSIONS_RESOURCE_PATH = "/eundms-suppressions.xml";
+  private static final String CONFIG_RESOURCE_PATH = "/eundms-checkstyle.xml";
+  private static final String DEFAULT_TARGET_DIR = "src/main/java";
+  private static final String SUPPRESSIONS_PLACEHOLDER = "eundms-suppressions.xml";
+  
   public static void main(String[] args) throws Exception {
     // 1. 규칙 파일과 제외 파일을 임시 위치로 추출
-    File suppressionsFile = extractResource("/eundms-suppressions.xml");
-    File configFile = extractResource("/eundms-checkstyle.xml");
+    File suppressionsFile = extractResource(SUPPRESSIONS_RESOURCE_PATH);
+    File configFile = extractResource(CONFIG_RESOURCE_PATH);
 
     // 2. 규칙 파일 내에서 suppressions.xml 경로를 동적으로 바꾸기
     replaceSuppressionsPath(configFile, suppressionsFile);
 
     // 3. Checkstyle 실행 인자
-    String targetDir = (args.length > 0) ? args[0] : "src/main/java";
+    String targetDir = (args.length > 0) ? args[0] : DEFAULT_TARGET_DIR;
     String[] checkstyleArgs = {
         "-c", configFile.getAbsolutePath(),
         targetDir
@@ -39,9 +45,8 @@ public class RunCheckstyle {
   }
 
   private static void replaceSuppressionsPath(File configFile, File suppressionsFile) throws Exception {
-    // 규칙 XML에서 suppressions.xml 경로를 실제 임시 파일 경로로 치환
     String content = Files.readString(configFile.toPath());
-    content = content.replace("suppressions.xml", suppressionsFile.getAbsolutePath());
+    content = content.replace(SUPPRESSIONS_PLACEHOLDER, suppressionsFile.getAbsolutePath());
     Files.writeString(configFile.toPath(), content);
   }
 }
