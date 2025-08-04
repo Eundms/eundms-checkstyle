@@ -46,13 +46,14 @@ curl -o target/eundms-checkstyle-${eundms.checkstyle.version}.jar \
 java -jar target/eundms-checkstyle-${eundms-checkstyle-version}.jar
 ```
 
-### maven 빌드 시 검사 자동화 
+### maven verify 단게에서 검사 자동화 
 - pom.xml
 ```xml
 <!-- 버전, 릴리즈 url 관리 --> 
 <properties>
   <eundms.checkstyle.version>1.0.0</eundms.checkstyle.version>
   <eundms.nexus.release.url>https://nexus.eundms.com/repository/maven-releases</eundms.nexus.release.url>
+  <exec-maven-plugin.version>3.1.0</exec-maven-plugin.version>
 </properties>
 
 <!-- repositories -->
@@ -71,6 +72,30 @@ java -jar target/eundms-checkstyle-${eundms-checkstyle-version}.jar
     <version>${eundms.checkstyle.version}</version>
   </dependency>
 </dependencies>
+
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>exec-maven-plugin</artifactId>
+      <version>${exec-maven-plugin.version}</version>
+      <executions>
+        <execution>
+          <id>run-checkstyle</id>
+          <phase>verify</phase> 
+          <goals>
+            <goal>java</goal>
+          </goals>
+          <configuration>
+            <mainClass>com.eundms.RunCheckstyle</mainClass>
+            <classpathScope>compile</classpathScope>
+          </configuration>
+        </execution>
+      </executions>
+    </plugin>
+  </plugins>
+</build>
+
 ```
 
 ### pre-commit Hook 연동
